@@ -1,5 +1,5 @@
 # impress-js
-impress,js制作的[前端技术分享](http://fog3211.com/impress-js/)
+impress,js制作的[前端技术分享](http://fog3211.com/impress-js/show/index.html)
 
 ## 主要内容
 
