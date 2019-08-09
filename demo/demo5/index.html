@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>demo5</title>
+    <style>
+        .container {
+            width: 600px;
+            height: 600px;
+            /* border: 1px solid #ccc; */
+            margin: 0 auto;
+            animation: run 3s linear infinite;
+            position: relative;
+        }
+
+        .box {
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(-69deg, #BE36E0, #3F758B);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            clip-path: polygon(0 0);
+            transform: all 1s linear;
+        }
+
+        .inner-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            width: 1%;
+            height: 1%;
+            border-radius: 50%;
+            background-color: #fff;
+        }
+
+        @keyframes run {
+            0% {
+                transform: rotate(0);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes toBig {
+            0% {
+                width: 1%;
+                height: 1%;
+            }
+
+            100% {
+                width: 90%;
+                height: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <button onclick="start()">start</button>
+    <div class="container" id="container">
+        <div class="box" id="box">
+            <div class="inner-box" id="inner-box"></div>
+        </div>
+    </div>
+
+    <script>
+        let container = document.getElementById("container");
+        let box = document.getElementById("box");
+        let innerBox = document.getElementById("inner-box");
+
+        let num = 1;
+
+        function start() {
+            container.style.animation = "run 3 s linear infinite";
+
+
+            setInterval(function () {
+                let arr_result = createPolygon(num);
+
+                let str = `${arr_result[0].x}% ${arr_result[0].y}%`
+                for (let i = 1; i < arr_result.length; i++) {
+                    str += `,${arr_result[i].x}% ${arr_result[i].y}%`
+                }
+                box.style.clipPath = `polygon(${str})`;
+                if (num >= 20) {
+                    box.style.clipPath = `circle(50%)`;
+
+                    innerBox.style.animation = "toBig 3s linear";
+                    innerBox.style.animationFillMode = "forwards";
+
+                    return;
+                }
+                num++;
+            }, 1000);
+        }
+
+        function createPolygon(n) {
+            let r = 50;
+            let arr = [];
+
+            for (i = 0; i < n; i++) {
+                arr.push({
+                    x: Math.round(50 + r * Math.cos(2 * Math.PI * i / n)),
+                    y: Math.round(50 + r * Math.sin(2 * Math.PI * i / n))
+                });
+            }
+
+            return arr;
+        }
+    </script>
+
+
+
+</body>
+
+</html>
