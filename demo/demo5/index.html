@@ -25,7 +25,8 @@
             left: 50%;
             transform: translateX(-50%) translateY(-50%);
             clip-path: polygon(0 0);
-            transform: all 1s linear;
+            transition: all 1s linear;
+            z-index: 9;
         }
 
         .inner-box {
@@ -37,6 +38,34 @@
             height: 1%;
             border-radius: 50%;
             background-color: #fff;
+            transition: all 1s linear;
+            z-index: 99;
+        }
+
+        .time {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            text-align: center;
+            display: none;
+            font-size: 50px;
+            z-index: 9999;
+        }
+
+        .over-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #fff;
+            transition: all 1s linear;
+            display: none;
+            clip-path: polygon(0 0);
+            z-index: 9;
         }
 
         @keyframes run {
@@ -65,22 +94,28 @@
 
 <body>
     <button onclick="start()">start</button>
+    <button onclick="finish()">finish</button>
+    <button onclick="changeColor()">changeColor</button>
     <div class="container" id="container">
         <div class="box" id="box">
-            <div class="inner-box" id="inner-box"></div>
+            <div class="inner-box" id="inner-box">
+            </div>
         </div>
+        <div class="time" id="time">倒计时</div>
+        <div class="over-box" id="over-box"></div>
     </div>
 
     <script>
         let container = document.getElementById("container");
         let box = document.getElementById("box");
         let innerBox = document.getElementById("inner-box");
+        let time = document.getElementById("time");
+        let overBox = document.getElementById("over-box");
 
         let num = 1;
 
         function start() {
-            container.style.animation = "run 3 s linear infinite";
-
+            container.style.animation = "run 3s linear infinite";
 
             setInterval(function () {
                 let arr_result = createPolygon(num);
@@ -93,6 +128,7 @@
                 if (num >= 20) {
                     box.style.clipPath = `circle(50%)`;
 
+                    container.style.animation = "none 3s linear infinite";
                     innerBox.style.animation = "toBig 3s linear";
                     innerBox.style.animationFillMode = "forwards";
 
@@ -100,6 +136,53 @@
                 }
                 num++;
             }, 1000);
+        }
+
+        function finish() {
+            let num = 10;
+            let countdown = 10;
+            let arr = [];
+
+            time.style.display = "block";
+
+            for (let i = 0; i < 11; i++) {
+                arr.push({
+                    x: 50,
+                    y: 100
+                });
+            }
+            setInterval(function () {
+                if (num >= 0) {
+                    // console.log(num);
+                    overBox.style.display = "block";
+
+                    createCircle(arr, num);
+                    // console.log(arr);
+
+                    let str = `50% 50%`;
+                    for (let i = 0; i < arr.length; i++) {
+                        str += `,${arr[i].x}% ${arr[i].y}%`
+                    }
+                    // console.log(str)
+                    overBox.style.clipPath = `polygon(${str})`;
+
+                    num--;
+                } else {
+                    return;
+                }
+
+            }, 1000);
+
+            setTimeout(function () {
+                setInterval(function () {
+                    if (countdown >= 0) {
+                        time.innerHTML = countdown--;
+                    } else {
+                        return;
+                    }
+                }, 1000);
+            }, 1000);
+
         }
 
         function createPolygon(n) {
@@ -114,6 +197,29 @@
             }
 
             return arr;
+        }
+
+        function createCircle(arr, t) {
+            let r = 50;
+            let angle = 360 / 10;
+            arr[10 - t] = {
+                x: 100 - Math.round(50 + r * Math.sin(angle * (10 - t) * Math.PI / 180)),
+                y: 100 - Math.round(50 + r * Math.cos(angle * (10 - t) * Math.PI / 180))
+            };
+            // console.log(arr[10 - t], t)
+            copyArrItem(11, arr, t);
+
+            return arr;
+        }
+
+        function copyArrItem(n, arr, t) {
+            for (let i = 10 - t; i < n; i++) {
+                arr[i] = arr[10 - t];
+            }
+        }
+
+        function changeColor() {
+            overBox.style.backgroundColor = "#7bd3d3";
         }
     </script>
 
